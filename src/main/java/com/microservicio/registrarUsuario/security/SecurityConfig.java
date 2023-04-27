@@ -12,6 +12,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+
+    /**
+        Cuando hago un crud LO PRIMERO que hará es venir aquí y pasar por el filtro.
+        Después vuelve al controlador y empieza a moverse por los métodos de las
+        diferentes clases.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 //        http.authorizeHttpRequests().anyRequest()
