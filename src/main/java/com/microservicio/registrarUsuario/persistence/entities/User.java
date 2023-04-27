@@ -3,10 +3,8 @@ package com.microservicio.registrarUsuario.persistence.entities;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,10 +38,9 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles
                 .stream()
-                .map(role-> new SimpleGrantedAuthority("Role_" + role.name ))
-                .collect(Collectors.toList());
+                .map(role-> new SimpleGrantedAuthority(role.toString()))
+                .toList();
     }
-
 
 
     @Override
