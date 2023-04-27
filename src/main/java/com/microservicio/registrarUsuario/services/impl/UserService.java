@@ -1,5 +1,9 @@
 package com.microservicio.registrarUsuario.services.impl;
 
+import com.microservicio.registrarUsuario.exceptions.NewUserWithDifferentPasswordsException;
+import com.microservicio.registrarUsuario.expose.dto.CreateUserDTO;
+import com.microservicio.registrarUsuario.expose.dto.GetUserDTO;
+import com.microservicio.registrarUsuario.mapstruct.IUserMapper;
 import com.microservicio.registrarUsuario.persistence.entities.User;
 import com.microservicio.registrarUsuario.persistence.entities.UserRole;
 import com.microservicio.registrarUsuario.persistence.repository.UserRepository;
@@ -22,20 +26,31 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final IUserMapper iUserMapper; //mapeado
+
     @Override
     public Optional<User> findByUser(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public User save(User user){
-        try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public GetUserDTO save(CreateUserDTO createUserDTO) {
+        if(createUserDTO.getPassword().contentEquals(createUserDTO.getPassword2())) {
+            User user = new User();
+            user.setUsername(createUserDTO.getUsername());
+            user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
             user.setRoles(Stream.of(UserRole.USER).collect(Collectors.toSet()));
-            return userRepository.save(user);
-        }catch (DataIntegrityViolationException ex){ //Se usa por el email (unique=true)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+            try {
+                userRepository.save(user);
+                GetUserDTO getUserDTO = iUserMapper.mapToDto(user);
+                return getUserDTO;
 
+            } catch (DataIntegrityViolationException ex) { //Se usa por el email (unique=true)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"El correo electronico ya existe");
+
+            }
+        }else{
+            throw new NewUserWithDifferentPasswordsException(); //Las contraseñas no coinciden
         }
     }
 }
