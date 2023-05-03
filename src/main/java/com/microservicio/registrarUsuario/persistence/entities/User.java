@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,14 +18,16 @@ import java.util.stream.Collectors;
 
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor
+@Table(name = "user")
 public class User implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
 
+    @Column(unique = true)
     private String username;
 
-    @Column(unique = true)
+
     private String email;
 
     private String password;
