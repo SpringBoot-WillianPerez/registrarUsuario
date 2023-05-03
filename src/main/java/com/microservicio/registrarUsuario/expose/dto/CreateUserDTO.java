@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
  "username": "user1"
  "email": "user1@jwt.io"
  "password": "admin"
- "password2": "admin"
+
  }
  */
 
@@ -29,6 +29,4 @@ public class CreateUserDTO {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String password2;
 }

@@ -1,7 +1,6 @@
 package com.microservicio.registrarUsuario.services.impl;
 
-import com.microservicio.registrarUsuario.exceptions.NombreExistenteException;
-import com.microservicio.registrarUsuario.exceptions.NewUserWithDifferentPasswordsException;
+import com.microservicio.registrarUsuario.exceptions.CorreoExistenteException;
 import com.microservicio.registrarUsuario.expose.dto.CreateUserDTO;
 import com.microservicio.registrarUsuario.expose.dto.GetUserDTO;
 import com.microservicio.registrarUsuario.mapstruct.IUserMapper;
@@ -36,9 +35,9 @@ public class UserService implements IUserService {
 
     @Override
     public GetUserDTO save(CreateUserDTO createUserDTO) {
-        if(createUserDTO.getPassword().contentEquals(createUserDTO.getPassword2())) {
             User user = new User();
             user.setUsername(createUserDTO.getUsername());
+            user.setEmail(createUserDTO.getEmail());
             user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
             user.setRoles(Stream.of(UserRole.USER).collect(Collectors.toSet()));
 
@@ -47,11 +46,8 @@ public class UserService implements IUserService {
                 GetUserDTO getUserDTO = iUserMapper.mapToDto(user);
                 return getUserDTO;
 
-            } catch (DataIntegrityViolationException ex) { //Se usa para el nombre (unique=true)
-                throw  new NombreExistenteException();
+            } catch (DataIntegrityViolationException ex) { //Se usa para el correo (unique=true)
+                throw  new CorreoExistenteException();
             }
-        }else{
-            throw new NewUserWithDifferentPasswordsException(); //Las contraseñas no coinciden
-        }
     }
 }

@@ -10,17 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalControllerAdvice {
 
 
-    /**
-        Mensaje de error si las contraseñas no coinciden
-     */
-    @ExceptionHandler(NewUserWithDifferentPasswordsException.class)
-    public ResponseEntity<ApiError> handleNewPasswordErrors(NewUserWithDifferentPasswordsException ex){
-
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
-
-        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
-
-    }
 
     /**
      Mensaje de error si el JSON que nos pasan no es correcto
@@ -33,8 +22,8 @@ public class GlobalControllerAdvice {
     }
 
 
-    @ExceptionHandler(NombreExistenteException.class)
-    public ResponseEntity<ApiError> handleCorreoExistente(NombreExistenteException ex){
+    @ExceptionHandler(CorreoExistenteException.class)
+    public ResponseEntity<ApiError> handleCorreoExistente(CorreoExistenteException ex){
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
 

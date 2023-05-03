@@ -19,6 +19,5 @@ public class UserController {
     public ResponseEntity<GetUserDTO> save(@RequestBody CreateUserDTO newuser){
 
             return new ResponseEntity<>(userService.save(newuser), HttpStatus.CREATED);
-
     }
 }
