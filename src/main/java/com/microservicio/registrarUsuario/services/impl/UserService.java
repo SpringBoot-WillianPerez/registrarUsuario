@@ -1,6 +1,7 @@
 package com.microservicio.registrarUsuario.services.impl;
 
 import com.microservicio.registrarUsuario.exceptions.CorreoExistenteException;
+import com.microservicio.registrarUsuario.exceptions.UserNotFoundException;
 import com.microservicio.registrarUsuario.expose.dto.CreateUserDTO;
 import com.microservicio.registrarUsuario.expose.dto.GetUserDTO;
 import com.microservicio.registrarUsuario.mapstruct.IUserMapper;
@@ -10,9 +11,11 @@ import com.microservicio.registrarUsuario.persistence.repository.UserRepository;
 import com.microservicio.registrarUsuario.services.contract.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,11 +27,13 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final IUserMapper iUserMapper; //mapeado
+    private final IUserMapper iUserMapper; //mapeador
 
     @Override
     public Optional<User> findByUser(String username) {
+
         return userRepository.findByUsername(username);
+
     }
 
 
@@ -40,6 +45,11 @@ public class UserService implements IUserService {
             user.setEmail(createUserDTO.getEmail());
             user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
             user.setRoles(Stream.of(UserRole.USER).collect(Collectors.toSet()));
+//
+//            User user1 = new User(createUserDTO.getUsername(),
+//                    createUserDTO.getEmail(),
+//                    passwordEncoder.encode(createUserDTO.getPassword()),
+//                    List.of(UserRole.ADMIN));
 
             try {
                 userRepository.save(user);

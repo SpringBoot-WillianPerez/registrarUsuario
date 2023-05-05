@@ -1,4 +1,4 @@
-package com.microservicio.registrarUsuario.security;
+package com.microservicio.registrarUsuario.security.access;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

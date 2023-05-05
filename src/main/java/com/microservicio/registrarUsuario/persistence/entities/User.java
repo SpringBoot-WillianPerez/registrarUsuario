@@ -2,23 +2,21 @@ package com.microservicio.registrarUsuario.persistence.entities;
 
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 
 @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
-@Table(name = "user")
+@NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
 public class User implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY )
@@ -37,11 +35,12 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING) //la enumeracion de roles se almacenará en BBDD como string
     private Set<UserRole> roles;
 
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() { //nos devuelve los roles/permisos del usuario
         return roles
                 .stream()
-                .map(role-> new SimpleGrantedAuthority(role.WRITE.toString()))//Permisos que tendrá
+                .map(role-> new SimpleGrantedAuthority(role.toString()))//Permisos que tendrá
                 .toList();
     }
 

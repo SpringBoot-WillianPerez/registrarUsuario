@@ -1,5 +1,6 @@
 package com.microservicio.registrarUsuario.services.impl;
 
+import com.microservicio.registrarUsuario.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,6 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userService.findByUser(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + "no encontrado"));
+        .orElseThrow(() -> new UsernameNotFoundException(username + " no encontrado")); //este throw está oculto
     }
 }

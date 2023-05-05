@@ -25,6 +25,7 @@ public interface IUserMapper {
      @Mappings({
 
             @Mapping(target = "username", source = "username"),
+            @Mapping(target = "password", source = "password"),
             @Mapping(target = "roles", source = "roles")
     })
     GetUserDTO mapToDto(User user);
