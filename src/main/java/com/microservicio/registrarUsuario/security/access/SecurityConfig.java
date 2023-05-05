@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .logout().invalidateHttpSession(true)
                 .clearAuthentication(true).permitAll()
 //                .antMatchers(HttpMethod.GET, "/hello/**").hasRole("USER")
-//                .antMatchers(HttpMethod.GET, "/chao/**").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.GET, "/chao/**").hasRole("ADMIN")s
                 ;
 
 
