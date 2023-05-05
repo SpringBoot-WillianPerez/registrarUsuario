@@ -1,7 +1,9 @@
-package com.microservicio.registrarUsuario.security.refresh;
+package com.microservicio.registrarUsuario.persistence.entities;
 
 
 import com.microservicio.registrarUsuario.persistence.entities.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,10 +11,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Getter @Setter
 public class RefreshToken {
     @Id
     private Long id;
@@ -29,6 +33,11 @@ public class RefreshToken {
     @Column(nullable = false)
     private Instant  expiryDate;
 
-    @CreatedDate
-    private Instant createdAt;
+
+    private LocalDateTime createdAt;
+    @PrePersist
+    private void setCreationDate(){
+        this.createdAt = LocalDateTime.now();
+
+    }
 }

@@ -5,8 +5,10 @@ import com.microservicio.registrarUsuario.expose.dto.CreateUserDTO;
 import com.microservicio.registrarUsuario.expose.dto.GetUserDTO;
 import com.microservicio.registrarUsuario.expose.dto.LoginRequest;
 import com.microservicio.registrarUsuario.expose.dto.LoginResponse;
+import com.microservicio.registrarUsuario.persistence.entities.RefreshToken;
 import com.microservicio.registrarUsuario.persistence.entities.User;
 import com.microservicio.registrarUsuario.security.access.JwtTokenProvider;
+import com.microservicio.registrarUsuario.services.impl.RefreshTokenService;
 import com.microservicio.registrarUsuario.services.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,8 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authManager;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final RefreshTokenService refreshTokenService;
 
     /**
      * REGISTER
@@ -51,7 +55,6 @@ public class AuthController {
             throw ex;
 
         }
-
         //Para hacer la autenticación
         /**
          * Invoca a UserDetailsService para sacar de BBDD
@@ -63,6 +66,9 @@ public class AuthController {
         //y aquí GENERAMOS el token
         String token = jwtTokenProvider.generateToken(authentication);
 
+        refreshTokenService.delete(user); //Si tiene algun token de refresco lo borramo
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user); //Creamos token de refresco
+
         //Ese token generado es el que enviamos al Cliente
         return new LoginResponse(
                 user.getUsername(),
@@ -70,7 +76,7 @@ public class AuthController {
                         .stream()
                         .map(GrantedAuthority::getAuthority)
                         .toList(),
-                token);
+                token, refreshToken.getToken());
 
     }
 
