@@ -12,7 +12,7 @@ public interface IRefreshTokenService {
 
     Optional<RefreshToken> findByToken(String token);
 
-    @Transactional //para que cuando esté borrando nadie se meta hasta que acabe
+
     int delete(User user);
 
     RefreshToken verify(RefreshToken refreshToken);

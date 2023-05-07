@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,8 +23,8 @@ public class GlobalControllerAdvice {
     }
 
 
-    @ExceptionHandler(CorreoExistenteException.class)
-    public ResponseEntity<ApiError> handleCorreoExistente(CorreoExistenteException ex){
+    @ExceptionHandler(NombreExistenteException.class)
+    public ResponseEntity<ApiError> handleCorreoExistente(NombreExistenteException ex){
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
 

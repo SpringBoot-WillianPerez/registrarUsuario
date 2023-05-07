@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,6 +52,7 @@ public class RefreshTokenService implements IRefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
+    @Transactional //para que cuando esté borrando nadie se meta hasta que acabe
     @Override
     public int delete(User user) {
         return refreshTokenRepository.deleteByUser(user);
