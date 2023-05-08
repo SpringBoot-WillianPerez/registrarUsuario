@@ -41,7 +41,7 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() { //nos devuelve los roles/permisos del usuario
         return roles
                 .stream()
-                .map(role-> new SimpleGrantedAuthority(role.toString()))//Permisos que tendrá
+                .map(role-> new SimpleGrantedAuthority("ROLE_"+role.toString()))//Permisos que tendrá. No confundir ROL con AUTHORITIES
                 .toList();
     }
 

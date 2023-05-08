@@ -36,7 +36,7 @@
 			<artifactId>spring-data-jpa</artifactId>
 			<version>2.7.11</version>
 		</dependency>
-		<!--		Consider defining a bean of type 'com.repository.UserRepository' in your configuration-->
+		<!--		Consider defining a bean of type 'com.repository.AuthRepository' in your configuration-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

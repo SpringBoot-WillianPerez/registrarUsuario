@@ -1,13 +1,12 @@
 package com.microservicio.registrarUsuario.expose.controllers;
 
 import com.microservicio.registrarUsuario.exceptions.RefreshTokenException;
-import com.microservicio.registrarUsuario.exceptions.UserNotFoundException;
 import com.microservicio.registrarUsuario.expose.dto.*;
 import com.microservicio.registrarUsuario.persistence.entities.RefreshToken;
 import com.microservicio.registrarUsuario.persistence.entities.User;
 import com.microservicio.registrarUsuario.security.access.JwtTokenProvider;
 import com.microservicio.registrarUsuario.services.impl.RefreshTokenService;
-import com.microservicio.registrarUsuario.services.impl.UserService;
+import com.microservicio.registrarUsuario.services.impl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService userService;
     private final AuthenticationManager authManager;
     private final JwtTokenProvider jwtTokenProvider;
 

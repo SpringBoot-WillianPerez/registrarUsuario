@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class UpdateUsernameDTO {
+public class UpdateUserEmailDTO {
 
     private String email;
 }
