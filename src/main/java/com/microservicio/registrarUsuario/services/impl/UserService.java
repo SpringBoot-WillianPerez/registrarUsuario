@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,7 +37,7 @@ public class UserService implements IUserService {
 
 
     @Override
-    public GetUserDTO save(CreateUserDTO createUserDTO) {
+    public GetUserDTO save(CreateUserDTO createUserDTO, Set<UserRole> roles) {
             User user = new User();
             user.setUsername(createUserDTO.getUsername());
             user.setEmail(createUserDTO.getEmail());
@@ -56,5 +57,21 @@ public class UserService implements IUserService {
             } catch (DataIntegrityViolationException ex) { //Se usa para el Nombre de usuario (unique=true)
                 throw  new NombreExistenteException();
             }
+    }
+
+    public User saveUser(CreateUserDTO createUserDTO){
+        return save(createUserDTO, Set.of(UserRole.USER)) ;
+    }
+
+    public User saveAdmin(CreateUserDTO createUserDTO){
+        return save(createUserDTO, Set.of(UserRole.MASTER));
+    }
+
+    public User saveUser(CreateUserDTO createUserDTO){
+        return save(createUserDTO, Set.of(UserRole.ADMIN_APP)) ;
+    }
+
+    public User saveAdmin(CreateUserDTO createUserDTO){
+        return save(createUserDTO, Set.of(UserRole.ADMIN_USER));
     }
 }
