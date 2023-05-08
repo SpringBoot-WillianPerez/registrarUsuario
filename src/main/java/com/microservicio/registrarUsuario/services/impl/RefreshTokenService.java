@@ -42,7 +42,7 @@ public class RefreshTokenService implements IRefreshTokenService {
     public RefreshToken verify(RefreshToken refreshToken) {
         if(refreshToken.getExpiryDate().compareTo(Instant.now()) < 0){
             refreshTokenRepository.delete(refreshToken);
-            throw new RefreshTokenException("Token de refresco Expirado"+ refreshToken.getToken()+ ". Por favor, Login de nuevo ");
+            throw new RefreshTokenException("Token de refresco Expirado '"+ refreshToken.getToken()+ "'. Por favor, Login de nuevo ");
         }
         return refreshToken;
     }
