@@ -33,9 +33,27 @@ public class AuthController {
      * REGISTER
      */
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<GetUserDTO> save(@RequestBody CreateUserDTO newuser){
-            return new ResponseEntity<>(userService.save(newuser), HttpStatus.CREATED);
+    @PostMapping("/auth/register/master")
+    public ResponseEntity<GetUserDTO> save_master(@RequestBody CreateUserDTO newuser){
+            return new ResponseEntity<GetUserDTO>(userService.saveMaster(newuser), HttpStatus.CREATED);
+
+    }
+
+    @PostMapping("/auth/register/admin-user")
+    public ResponseEntity<GetUserDTO> save_admin_user(@RequestBody CreateUserDTO newuser){
+        return new ResponseEntity<GetUserDTO>(userService.saveAdminUser(newuser), HttpStatus.CREATED);
+
+    }
+
+    @PostMapping("/auth/register/admin-app")
+    public ResponseEntity<GetUserDTO> save_admin_app(@RequestBody CreateUserDTO newuser){
+        return new ResponseEntity<GetUserDTO>(userService.saveAdminApp(newuser), HttpStatus.CREATED);
+
+    }
+
+    @PostMapping("/auth/register/client")
+    public ResponseEntity<GetUserDTO> save_client(@RequestBody CreateUserDTO newuser){
+        return new ResponseEntity<GetUserDTO>(userService.saveClient(newuser), HttpStatus.CREATED);
     }
 
 

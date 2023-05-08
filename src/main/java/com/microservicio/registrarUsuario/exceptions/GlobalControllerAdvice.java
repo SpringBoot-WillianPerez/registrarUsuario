@@ -50,15 +50,15 @@ public class GlobalControllerAdvice {
 
     }
 
-//   NO HACE FALTA
-//    @ExceptionHandler(UsernameNotFoundException.class)
-//    public ResponseEntity<ApiError> handleUsernameNotFoundException(UsernameNotFoundException ex){
-//
-//        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
-//
-//        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
-//
-//    }
+
+    @ExceptionHandler(IdUserNotFoundException.class)
+    public ResponseEntity<ApiError> handleIdUserNotFoundException(IdUserNotFoundException ex){
+
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
+
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+
+    }
 //    NO HACE FALTA
 //    @ExceptionHandler(UserNotFoundException.class)
 //    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex){
