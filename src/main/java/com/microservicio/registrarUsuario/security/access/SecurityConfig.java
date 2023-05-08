@@ -1,6 +1,7 @@
 package com.microservicio.registrarUsuario.security.access;
 
 
+import com.microservicio.registrarUsuario.persistence.entities.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,10 +38,14 @@ public class SecurityConfig {
 
         //Aqui se configuran todas las urls de los controladores
         http.authorizeHttpRequests()
+                //EndPoints Públicos
                 .mvcMatchers("/auth/**")
                 .permitAll() //Habilitamos controladores.//Autorizamos Controladores. En este caso controlador (/auth/**).  Esto sirve para que se pueda Autenticar cualquiera (EVIDENTE).
-                .anyRequest()
-                .authenticated()
+
+                //EnPoints Privados
+                .mvcMatchers("/hello/**").hasRole(UserRole.MASTER.toString())
+                .mvcMatchers("/chao/**").hasRole(UserRole.CLIENT.toString())
+                .anyRequest().authenticated()
                 .and()
                 .logout().invalidateHttpSession(true)
                 .clearAuthentication(true).permitAll()

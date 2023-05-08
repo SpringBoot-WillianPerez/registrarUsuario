@@ -29,7 +29,7 @@ public class UserController {
         return new ResponseEntity<List<GetUserDTO>>(userService.findAll(), HttpStatus.OK);
     }
 
-
+    //Para comprobar lo que se guarda en ENTIDAD
     @GetMapping("/us/{id}")
     public ResponseEntity<User>find(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.findById(id)
