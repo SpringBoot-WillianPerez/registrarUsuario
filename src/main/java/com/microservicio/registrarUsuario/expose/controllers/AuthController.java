@@ -1,10 +1,8 @@
 package com.microservicio.registrarUsuario.expose.controllers;
 
+import com.microservicio.registrarUsuario.exceptions.RefreshTokenException;
 import com.microservicio.registrarUsuario.exceptions.UserNotFoundException;
-import com.microservicio.registrarUsuario.expose.dto.CreateUserDTO;
-import com.microservicio.registrarUsuario.expose.dto.GetUserDTO;
-import com.microservicio.registrarUsuario.expose.dto.LoginRequest;
-import com.microservicio.registrarUsuario.expose.dto.LoginResponse;
+import com.microservicio.registrarUsuario.expose.dto.*;
 import com.microservicio.registrarUsuario.persistence.entities.RefreshToken;
 import com.microservicio.registrarUsuario.persistence.entities.User;
 import com.microservicio.registrarUsuario.security.access.JwtTokenProvider;
@@ -45,7 +43,7 @@ public class AuthController {
      LOGIN
      */
     @PostMapping("/auth/login")
-    public LoginResponse loginResponse(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
     Authentication authenticationDTO = null;
         try {
             //Añadimos el usuario y contraseña del usuario que se va a loguear para, con estos datos, posteriormente Autenticarse
@@ -63,21 +61,50 @@ public class AuthController {
         Authentication authentication = authManager.authenticate(authenticationDTO);
         User user = (User) authentication.getPrincipal();
 
-        //y aquí GENERAMOS el token
+        //1. aquí GENERAMOS el token desde la authentication
         String token = jwtTokenProvider.generateToken(authentication);
 
         refreshTokenService.delete(user); //Si tiene algun token de refresco lo borramo
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user); //Creamos token de refresco
 
-        //Ese token generado es el que enviamos al Cliente
-        return new LoginResponse(
-                user.getUsername(),
-                user.getAuthorities()
-                        .stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .toList(),
-                token, refreshToken.getToken());
+        LoginResponse loginResponse = new LoginResponse();
+
+        loginResponse.setUsername(user.getUsername());
+        loginResponse.setRoles(user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
+        loginResponse.setToken(token);
+        loginResponse.setRefreshToken(refreshToken.getToken());
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse); //Se puede cambiar por CREATED
 
     }
 
+    @PostMapping("/auth/refreshtoken")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        String refreshToken = refreshTokenRequest.getRefreshToken();
+
+        return refreshTokenService.findByToken(refreshToken)
+                .map(refreshTokenService::verify) //verificamos token refresh. verify es un método creado por nosotros
+                .map(RefreshToken::getUser)//Si verify OK: obtenemos usuario
+                .map(user -> {
+                    //2. aquí GENERAMOS el token desde user
+                    String token = jwtTokenProvider.generateToken(user);
+
+                    refreshTokenService.delete(user); //refresh token antiguo lo borramos
+                    RefreshToken refreshToken2 = refreshTokenService.createRefreshToken(user);
+
+
+                    return ResponseEntity.status(HttpStatus.CREATED)
+                            .body(LoginResponse.builder()
+                                    .token(token)
+                                    .refreshToken(refreshToken2.getToken())
+                                    .build()
+                                    );
+
+                })
+                .orElseThrow(() -> new RefreshTokenException("Token de refresco No Encontrado"));
+    }
 }

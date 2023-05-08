@@ -27,13 +27,24 @@ public class JwtTokenProvider {
 
 
     /**
-     Generamos TOKEN
+     Generamos TOKEN. Se prodrá hacer desde Authentication o desde User
+     1...
      authentication.getPrincipal() -> tiene dentro
      el usuario que está intentado Login desde AuthController
+
+     2... Este se crea por motivos del token de Refresco
+     generateToken(User user)
+
      */
     public String generateToken(Authentication authentication){
         User user = (User) authentication.getPrincipal();
         //extraemos un usuario a partir del objeto authentication
+
+        return generateToken(user);
+
+    }
+
+    public  String generateToken(User user){
 
         //OPCIÓN PARA CREAR TOKEN
         //A partir de un secreto ( jwtSecret.getBytes() ) que tenemos almacenado en el Properties + 1 algoritmo (HS512)->FIRMAMOS
@@ -50,6 +61,7 @@ public class JwtTokenProvider {
 
                 .compact();
     }
+
 
     public boolean isValidToken(String token){
 
