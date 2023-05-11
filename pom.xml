@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.microservicio</groupId>
 	<artifactId>registrarUsuario</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>registrarUsuario</name>
 	<description>Microservicio de registro de usuarios</description>
 	<properties>
