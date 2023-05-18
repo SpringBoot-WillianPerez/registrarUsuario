@@ -15,11 +15,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.util.pattern.PathPatternParser;
+
+import java.util.Arrays;
 
 
 @Configuration                     //@PreAuthorize, @PostAuthorize, @PreFilter, @PostFilter
 @RequiredArgsConstructor
 //@EnableMethodSecurity(prePostEnabled = true)
+
 public class SecurityConfig {
 
 
@@ -32,8 +39,11 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+//        cors(Customizer.withDefaults())
         http
-                .cors(Customizer.withDefaults())
+                .cors()
+                .configurationSource(corsConfigurationSource())
+                .and()
                 .csrf().disable()//Deshabilitar sesion. Aqui estamos usando tokens (sin control de estados)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//deshabilitamos estados. Esta APi es sin estado y sin sesión
@@ -45,7 +55,7 @@ public class SecurityConfig {
                 .permitAll() //Habilitamos controladores.//Autorizamos Controladores. En este caso controlador (/auth/**).  Esto sirve para que se pueda Autenticar cualquiera (EVIDENTE).
 
                 //EnPoints Privados
-                .mvcMatchers("/**").hasRole(UserRole.MASTER.toString())
+                .mvcMatchers("/users/**").hasRole(UserRole.MASTER.toString())
                 .mvcMatchers("/orders_details/**").hasRole(UserRole.CLIENT.toString())
                 .mvcMatchers("/users/**").hasRole(UserRole.ADMIN_USER.toString())
                 .mvcMatchers("/products/**").hasRole(UserRole.ADMIN_APP.toString())
@@ -81,5 +91,20 @@ public class SecurityConfig {
                 .and().build();
     }
 
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8761","http://localhost:8090" ,"http://localhost:4200" ));
+        configuration.addExposedHeader("Access-Control-Allow-Origin");
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource( new PathPatternParser());
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
 
 }
