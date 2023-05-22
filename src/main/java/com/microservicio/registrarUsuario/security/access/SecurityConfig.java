@@ -42,9 +42,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 //        cors(Customizer.withDefaults())
         http
-//                .cors()
-//                .configurationSource(corsConfigurationSource())
-//                .and()
+                .cors()
+                .configurationSource(corsConfigurationSource())
+                .and()
                 .csrf().disable()//Deshabilitar sesion. Aqui estamos usando tokens (sin control de estados)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//deshabilitamos estados. Esta APi es sin estado y sin sesión
@@ -93,21 +93,21 @@ public class SecurityConfig {
     }
 
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-////        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8761","http://localhost:8090" ,"http://localhost:4200" ));
-//        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8090"));
-////        configuration.addAllowedOrigin("http://localhost:4200");
-////        configuration.addExposedHeader("Access-Control-Allow-Origin");
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-//        configuration.setAllowCredentials(true);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource( new PathPatternParser());
-//        source.registerCorsConfiguration("/**", configuration);
-//
-//        return source;
-//    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8761","http://localhost:8090" ,"http://localhost:4200" ));
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+//        configuration.addAllowedOrigin("http://localhost:4200");
+//        configuration.addExposedHeader("Access-Control-Allow-Origin");
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource( new PathPatternParser());
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
 
 }
