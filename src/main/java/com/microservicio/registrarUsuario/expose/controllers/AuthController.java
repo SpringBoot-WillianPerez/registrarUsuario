@@ -104,8 +104,11 @@ public class AuthController {
         loginResponse.setRefreshToken(refreshToken.getToken());
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(loginResponse); //Se puede cambiar por CREATED
+        
 
+
+//        return ResponseEntity.status(HttpStatus.OK).body(loginResponse); //Se puede cambiar por CREATED
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/refreshtoken")
