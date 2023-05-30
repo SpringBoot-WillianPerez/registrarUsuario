@@ -18,12 +18,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping(value = "/auth")
 public class AuthController {
 
     private final AuthService userService;
@@ -36,25 +35,25 @@ public class AuthController {
      * REGISTER
      */
 
-    @PostMapping("/auth/register/master")
+    @PostMapping("/register/master")
     public ResponseEntity<GetUserDTO> save_master(@RequestBody CreateUserDTO newuser){
             return new ResponseEntity<GetUserDTO>(userService.saveMaster(newuser), HttpStatus.CREATED);
 
     }
 
-    @PostMapping("/auth/register/admin-user")
+    @PostMapping("/register/admin-user")
     public ResponseEntity<GetUserDTO> save_admin_user(@RequestBody CreateUserDTO newuser){
         return new ResponseEntity<GetUserDTO>(userService.saveAdminUser(newuser), HttpStatus.CREATED);
 
     }
 
-    @PostMapping("/auth/register/admin-app")
+    @PostMapping("/register/admin-app")
     public ResponseEntity<GetUserDTO> save_admin_app(@RequestBody CreateUserDTO newuser){
         return new ResponseEntity<GetUserDTO>(userService.saveAdminApp(newuser), HttpStatus.CREATED);
 
     }
 
-    @PostMapping("/auth/register/client")
+    @PostMapping("/register/client")
     public ResponseEntity<GetUserDTO> save_client(@RequestBody CreateUserDTO newuser){
         return new ResponseEntity<GetUserDTO>(userService.saveClient(newuser), HttpStatus.CREATED);
     }
@@ -63,7 +62,7 @@ public class AuthController {
     /**
      LOGIN
      */
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
     Authentication authenticationDTO = null;
         try {
@@ -104,11 +103,14 @@ public class AuthController {
         loginResponse.setRefreshToken(refreshToken.getToken());
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(loginResponse); //Se puede cambiar por CREATED
+        
 
+
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse); //Se puede cambiar por CREATED
+//        return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/auth/refreshtoken")
+    @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
         String refreshToken = refreshTokenRequest.getRefreshToken();
 
