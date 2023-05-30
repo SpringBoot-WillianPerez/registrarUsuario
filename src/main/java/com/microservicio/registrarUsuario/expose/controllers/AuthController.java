@@ -18,8 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -107,8 +106,8 @@ public class AuthController {
         
 
 
-//        return ResponseEntity.status(HttpStatus.OK).body(loginResponse); //Se puede cambiar por CREATED
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse); //Se puede cambiar por CREATED
+//        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/refreshtoken")

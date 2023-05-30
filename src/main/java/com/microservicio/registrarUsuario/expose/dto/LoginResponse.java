@@ -3,6 +3,7 @@ package com.microservicio.registrarUsuario.expose.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
