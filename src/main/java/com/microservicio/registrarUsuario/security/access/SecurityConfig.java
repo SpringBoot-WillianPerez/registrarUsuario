@@ -40,43 +40,44 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-//        cors(Customizer.withDefaults())
         http
                 .cors()
                 .configurationSource(corsConfigurationSource())
                 .and()
-                .csrf().disable()//Deshabilitar sesion. Aqui estamos usando tokens (sin control de estados)
+                .csrf().disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//deshabilitamos estados. Esta APi es sin estado y sin sesión
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         //Aqui se configuran todas las urls de los controladores
         http.authorizeHttpRequests()
                 //EndPoints Públicos
                 .mvcMatchers("/auth/**")
-                .permitAll() //Habilitamos controladores.//Autorizamos Controladores. En este caso controlador (/auth/**).  Esto sirve para que se pueda Autenticar cualquiera (EVIDENTE).
+                .permitAll()
 
                 //EnPoints Privados
-                .mvcMatchers("/empleados/**").hasRole(UserRole.MASTER.toString())
-                .mvcMatchers("/api/v1/**").hasRole(UserRole.CLIENT.toString())
+                .mvcMatchers("/users/**","/stocks/**", "/products/**",
+                                        "/suppliers/**", "/address/**", "/client/**",
+                                        "/detail/**", "/order/**", "/status/**").hasRole(UserRole.MASTER.toString())
+
                 .mvcMatchers("/users/**").hasRole(UserRole.ADMIN_USER.toString())
+
                 .mvcMatchers("/products/**").hasRole(UserRole.ADMIN_APP.toString())
+
+                .mvcMatchers("/address/**", "/client/**",
+                        "/detail/**", "/order/**", "/status/**").hasRole(UserRole.CLIENT.toString())
 
                 .anyRequest().authenticated()
                 .and()
                 .logout().invalidateHttpSession(true)
                 .clearAuthentication(true).permitAll()
-//                .antMatchers(HttpMethod.GET, "/hello/**").hasRole("USER")
-//                .antMatchers(HttpMethod.GET, "/chao/**").hasRole("ADMIN")s
                 ;
 
 
 
-        //Filtros: intercepta peticiones y las analiza para ver si cumplen las normas/requisitos.
-        //Si cumple las normas pasan, si no cumple se bloquea el paso.
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); //agrega un filtro de  especificación antes de la posición de la clase .
-        //jwtFilter (nuestro filtro): va a evaluar la cabecera Authoritation, sacar el token jwt y validarlo
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return  http.build(); //una vez tratado el objeto lo devolvemos
+
+        return  http.build();
     }
 
     /**
@@ -86,9 +87,9 @@ public class SecurityConfig {
     public AuthenticationManager authManager(HttpSecurity http,
                                              PasswordEncoder passwordEncoder,
                                              UserDetailsService userDetailsService) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)//AuthenticationManagerBuilder.class Para poder crear objetos de tipo AuthenticationManager
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder) //Para cifrar la contraseña. No se debe almacenar en texto plano
+                .passwordEncoder(passwordEncoder)
                 .and().build();
     }
 
@@ -96,13 +97,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8761","http://localhost:8090" ,"http://localhost:4200" ));
         configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-//        configuration.addAllowedOrigin("http://localhost:4200");
-//        configuration.addExposedHeader("Access-Control-Allow-Origin");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
+
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource( new PathPatternParser());
         source.registerCorsConfiguration("/**", configuration);

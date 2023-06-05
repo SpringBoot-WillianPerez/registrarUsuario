@@ -69,17 +69,15 @@ public class JwtFilter extends OncePerRequestFilter {
                 Authentication auth = new UsernamePasswordAuthenticationToken(
                         userDetails.getUsername(),
                         userDetails.getPassword(),
-                        userDetails.getAuthorities()); //authentication nos dice si el usuario se a logueado correctamente
+                        userDetails.getAuthorities());
 
 
-                SecurityContextHolder.getContext().setAuthentication(auth); //El contexto es accesible en todas partes
-                // de la aplicación y nos permitira acceder al usuario que ha enviado una determinada petición
+                SecurityContextHolder.getContext().setAuthentication(auth);
 
-                //Cualquier controlador podria acceder a SecurityContextHolder y ver si existe un usuario logueado y
-                // en función de eso hacer una u otra cosa.
+
             }
 
-            filterChain.doFilter(request, response); //Para que la petición continue dentro de la cadena de filtros
+            filterChain.doFilter(request, response);
         }catch (JwtTokenException ex){
             log.info("Error de autenticación usando el token jwt"+ ex.getMessage());
             resolver.resolveException(request, response, null, ex);
@@ -91,8 +89,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String bearer = request.getHeader("Authorization");
 
-        if (StringUtils.hasLength(bearer) && bearer.startsWith("Bearer")) { //Si beare tiene tamaño y empieza por Bearer
-            return bearer.substring("Bearer".length()); //Nos quedamos con el token limpio
+
+        if (StringUtils.hasLength(bearer) && bearer.startsWith("Bearer")) {
+//            return bearer;
+            return bearer.substring("Bearer".length());
         }else {
             return null;
         }

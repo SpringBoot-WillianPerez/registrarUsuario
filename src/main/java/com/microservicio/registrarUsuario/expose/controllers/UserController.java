@@ -1,10 +1,9 @@
 package com.microservicio.registrarUsuario.expose.controllers;
 
-import com.microservicio.registrarUsuario.exceptions.IdUserNotFoundException;
+
 import com.microservicio.registrarUsuario.expose.dto.GetUserDTO;
 import com.microservicio.registrarUsuario.expose.dto.UpdateUserPasswDTO;
 import com.microservicio.registrarUsuario.expose.dto.UpdateUserEmailDTO;
-import com.microservicio.registrarUsuario.persistence.entities.User;
 import com.microservicio.registrarUsuario.persistence.repository.UserRepository;
 import com.microservicio.registrarUsuario.services.impl.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +28,7 @@ public class UserController {
         return new ResponseEntity<List<GetUserDTO>>(userService.findAll(), HttpStatus.OK);
     }
 
-    //Para comprobar lo que se guarda en ENTIDAD
-    @GetMapping("/us/{id}")
-    public ResponseEntity<User>find(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(userRepository.findById(id)
-                .orElseThrow(() -> new IdUserNotFoundException(id)));
-    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<GetUserDTO>findById(@PathVariable Long id){
