@@ -66,14 +66,14 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
     Authentication authenticationDTO = null;
         try {
-            //Añadimos el usuario y contraseña del usuario que se va a loguear para, con estos datos, posteriormente Autenticarse
+
             authenticationDTO = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
         }catch (BadCredentialsException ex){
 
             throw ex;
 
         }
-        //Para hacer la autenticación
+
         /**
          * Invoca a UserDetailsService para sacar de BBDD
          *  1. Nombre de Usuario
